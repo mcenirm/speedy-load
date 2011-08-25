@@ -1,0 +1,7 @@
+﻿## Interface: 40200
+## Title: Speedy Load
+## Version: 1.0
+## Author: Cybeloras of Mal'Ganis
+## Notes: Disables certain events during loading screens to drastically improve loading times.
+
+SpeedyLoad.lua
