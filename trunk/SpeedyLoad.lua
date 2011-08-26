@@ -1,8 +1,11 @@
-﻿local pairs, wipe, select, pcall = pairs, wipe, select, pcall
-local GetFramesRegisteredForEvent = GetFramesRegisteredForEvent
-local enteredOnce, listenForUnreg
+﻿
 local f = CreateFrame("Frame")
 f:RegisterEvent("PLAYER_ENTERING_WORLD")
+
+local pairs, wipe, select, pcall = pairs, wipe, select, pcall
+local GetFramesRegisteredForEvent = GetFramesRegisteredForEvent
+local enteredOnce, listenForUnreg
+
 local occured = {}
 local events = {
 	SPELLS_CHANGED = {},
@@ -14,12 +17,18 @@ local events = {
 	RECEIVED_ACHIEVEMENT_LIST = {},
 	ACTIONBAR_SLOT_CHANGED = {},
 }
+
 local function unregister(event, ...)
 	for i = 1, select("#", ...) do
 		local frame = select(i, ...)
 		frame:UnregisterEvent(event)
 		events[event][frame] = 1
 	end
+end
+
+if PetStableFrame then
+	-- just do this outright. Probably the most pointless event registration in history.
+	PetStableFrame:UnregisterEvent("SPELLS_CHANGED")
 end
 --[[local function onupdate()
 	listenForUnreg = nil
