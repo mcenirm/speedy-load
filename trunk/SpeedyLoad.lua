@@ -1,4 +1,4 @@
-﻿local pairs, wipe, select = pairs, wipe, select
+﻿local pairs, wipe, select, pcall = pairs, wipe, select, pcall
 local GetFramesRegisteredForEvent = GetFramesRegisteredForEvent
 local enteredOnce, listenForUnreg
 local f = CreateFrame("Frame")
@@ -10,10 +10,8 @@ local events = {
 	PET_TALENT_UPDATE = {},
 	WORLD_MAP_UPDATE = {},
 	UPDATE_WORLD_STATES = {},
-	VEHICLE_UPDATE = {},
 	CRITERIA_UPDATE = {},
 	RECEIVED_ACHIEVEMENT_LIST = {},
-	ACTIONBAR_SLOT_CHANGED = {},
 	ACTIONBAR_SLOT_CHANGED = {},
 }
 local function unregister(event, ...)
@@ -23,8 +21,9 @@ local function unregister(event, ...)
 		events[event][frame] = 1
 	end
 end
-local function onupdate()
+--[[local function onupdate()
 	listenForUnreg = nil
+	f:SetScript("OnUpdate", nil)
 	for event, frames in pairs(events) do
 		for frame in pairs(frames) do
 			frame:RegisterEvent(event)
@@ -34,14 +33,16 @@ local function onupdate()
 				if event == "ACTIONBAR_SLOT_CHANGED" then
 					arg1 = 0
 				end
-				OnEvent(frame, event, arg1)
+				local success, err = pcall(OnEvent, frame, event, arg1)
+				if not success then
+					geterrorhandler()(err, 1)
+				end
 			end
 			frames[frame] = nil
 		end
 	end
 	wipe(occured)
-	f:SetScript("OnUpdate", nil)
-end
+end]]
 
 f:SetScript("OnEvent", function(self, event)
 		if event == "PLAYER_ENTERING_WORLD" then
@@ -58,13 +59,32 @@ f:SetScript("OnEvent", function(self, event)
 				end)
 				enteredOnce = 1
 			else
-				f:SetScript("OnUpdate", onupdate)
+				--f:SetScript("OnUpdate", onupdate)
+				listenForUnreg = nil
+				for event, frames in pairs(events) do
+					for frame in pairs(frames) do
+						frame:RegisterEvent(event)
+						local OnEvent = occured[event] and frame:GetScript("OnEvent")
+						if OnEvent then
+							local arg1
+							if event == "ACTIONBAR_SLOT_CHANGED" then
+								arg1 = 0
+							end
+							local success, err = pcall(OnEvent, frame, event, arg1)
+							if not success then
+								geterrorhandler()(err, 1)
+							end
+						end
+						frames[frame] = nil
+					end
+				end
+				wipe(occured)
 			end
 		elseif event == "PLAYER_LEAVING_WORLD" then
 			wipe(occured)
 			for event in pairs(events) do
-				f:RegisterEvent(event)
 				unregister(event, GetFramesRegisteredForEvent(event))
+				f:RegisterEvent(event) -- MUST REGISTER AFTER UNREGISTER (duh?)
 			end
 			listenForUnreg = 1
 		else
