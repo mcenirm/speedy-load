@@ -1,6 +1,9 @@
 ﻿
-local f = CreateFrame("Frame")
-f:RegisterEvent("PLAYER_ENTERING_WORLD")
+-- --------------------------
+-- Speedy Load
+-- By Cybeloras of Mal'Ganis
+-- --------------------------
+
 
 local pairs, wipe, select, pcall = pairs, wipe, select, pcall
 local GetFramesRegisteredForEvent = GetFramesRegisteredForEvent
@@ -12,10 +15,26 @@ local events = {
 	USE_GLYPH = {},
 	PET_TALENT_UPDATE = {},
 	WORLD_MAP_UPDATE = {},
+	UPDATE_WORLD_STATES = {},
 	CRITERIA_UPDATE = {},
 	RECEIVED_ACHIEVEMENT_LIST = {},
 	ACTIONBAR_SLOT_CHANGED = {},
 }
+
+-- our PLAYER_ENTERING_WORLD handler needs to be absolutely the very first one that gets fired.
+local t = {GetFramesRegisteredForEvent("PLAYER_ENTERING_WORLD")}
+for i, frame in ipairs(t) do
+    frame:UnregisterEvent("PLAYER_ENTERING_WORLD")
+end
+
+local f = CreateFrame("Frame")
+
+f:RegisterEvent("PLAYER_ENTERING_WORLD")
+for i, frame in ipairs(t) do
+    frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+end
+wipe(t)
+t = nil
 
 local function unregister(event, ...)
 	for i = 1, select("#", ...) do
