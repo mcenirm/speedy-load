@@ -28,13 +28,14 @@ for i, frame in ipairs(t) do
 end
 
 local f = CreateFrame("Frame")
-
 f:RegisterEvent("PLAYER_ENTERING_WORLD")
+
 for i, frame in ipairs(t) do
     frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 end
 wipe(t)
 t = nil
+
 
 local function unregister(event, ...)
 	for i = 1, select("#", ...) do
@@ -48,28 +49,6 @@ if PetStableFrame then
 	-- just do this outright. Probably the most pointless event registration in history.
 	PetStableFrame:UnregisterEvent("SPELLS_CHANGED")
 end
---[[local function onupdate()
-	listenForUnreg = nil
-	f:SetScript("OnUpdate", nil)
-	for event, frames in pairs(events) do
-		for frame in pairs(frames) do
-			frame:RegisterEvent(event)
-			local OnEvent = occured[event] and frame:GetScript("OnEvent")
-			if OnEvent then
-				local arg1
-				if event == "ACTIONBAR_SLOT_CHANGED" then
-					arg1 = 0
-				end
-				local success, err = pcall(OnEvent, frame, event, arg1)
-				if not success then
-					geterrorhandler()(err, 1)
-				end
-			end
-			frames[frame] = nil
-		end
-	end
-	wipe(occured)
-end]]
 
 f:SetScript("OnEvent", function(self, event)
 		if event == "PLAYER_ENTERING_WORLD" then
@@ -86,7 +65,6 @@ f:SetScript("OnEvent", function(self, event)
 				end)
 				enteredOnce = 1
 			else
-				--f:SetScript("OnUpdate", onupdate)
 				listenForUnreg = nil
 				for event, frames in pairs(events) do
 					for frame in pairs(frames) do
