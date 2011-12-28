@@ -19,6 +19,7 @@ local events = {
 	CRITERIA_UPDATE = {},
 	RECEIVED_ACHIEVEMENT_LIST = {},
 	ACTIONBAR_SLOT_CHANGED = {},
+	SPELL_UPDATE_USABLE = {},
 }
 
 -- our PLAYER_ENTERING_WORLD handler needs to be absolutely the very first one that gets fired.
