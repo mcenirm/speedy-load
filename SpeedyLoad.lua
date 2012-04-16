@@ -5,7 +5,8 @@
 -- --------------------------
 
 
-local pairs, wipe, select, pcall = pairs, wipe, select, pcall
+local pairs, wipe, select, pcall, issecurevariable, hooksecurefunc, getmetatable =
+	  pairs, wipe, select, pcall, issecurevariable, hooksecurefunc, getmetatable
 local GetFramesRegisteredForEvent = GetFramesRegisteredForEvent
 local enteredOnce, listenForUnreg
 
@@ -37,12 +38,26 @@ end
 wipe(t)
 t = nil
 
+local validUnregisterFuncs = {}
+local function isUnregisterFuncValid(table, func)
+	if not func then
+		return false
+	end
+	local isValid = issecurevariable(table, "UnregisterEvent")
+	if not validUnregisterFuncs[func] then
+		validUnregisterFuncs[func] = not not isValid
+	end
+	return isValid
+end
 
 local function unregister(event, ...)
 	for i = 1, select("#", ...) do
 		local frame = select(i, ...)
-		frame:UnregisterEvent(event)
-		events[event][frame] = 1
+		local UnregisterEvent = frame.UnregisterEvent
+		if validUnregisterFuncs[UnregisterEvent] or isUnregisterFuncValid(frame, UnregisterEvent) then
+			UnregisterEvent(frame, event)
+			events[event][frame] = 1
+		end
 	end
 end
 
@@ -90,7 +105,7 @@ f:SetScript("OnEvent", function(self, event)
 			wipe(occured)
 			for event in pairs(events) do
 				unregister(event, GetFramesRegisteredForEvent(event))
-				f:RegisterEvent(event) -- MUST REGISTER AFTER UNREGISTER (duh?)
+				f:RegisterEvent(event) -- must register on f >AFTER< unregistering everything (duh?)
 			end
 			listenForUnreg = 1
 		else
