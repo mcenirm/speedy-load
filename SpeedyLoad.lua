@@ -38,7 +38,9 @@ end
 wipe(t)
 t = nil
 
-local validUnregisterFuncs = {}
+local validUnregisterFuncs = {
+	[f.UnregisterEvent] = true, -- might as well add this since we already have the frame
+}
 local function isUnregisterFuncValid(table, func)
 	if not func then
 		return false
