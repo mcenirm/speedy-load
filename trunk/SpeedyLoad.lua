@@ -15,12 +15,14 @@ local events = {
 	SPELLS_CHANGED = {},
 	USE_GLYPH = {},
 	PET_TALENT_UPDATE = {},
+	PLAYER_TALENT_UPDATE = {},
 	WORLD_MAP_UPDATE = {},
 	UPDATE_WORLD_STATES = {},
 	CRITERIA_UPDATE = {},
 	RECEIVED_ACHIEVEMENT_LIST = {},
 	ACTIONBAR_SLOT_CHANGED = {},
 	SPELL_UPDATE_USABLE = {},
+	UPDATE_FACTION = {},
 }
 
 -- our PLAYER_ENTERING_WORLD handler needs to be absolutely the very first one that gets fired.
