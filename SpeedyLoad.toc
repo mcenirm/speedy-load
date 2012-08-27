@@ -1,7 +1,8 @@
 ﻿## Interface: 40300
+## X-Compatible-With: 50001
 ## Title: Speedy Load
-## Version: 1.4.1
-## Author: Cybeloras of Mal'Ganis
+## Version: 2.0.0
+## Author: Cybeloras of Detheroc/Mal'Ganis
 ## Notes: Disables certain events during loading screens to drastically improve loading times.
 
 SpeedyLoad.lua
