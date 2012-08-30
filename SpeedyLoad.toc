@@ -1,5 +1,4 @@
-﻿## Interface: 40300
-## X-Compatible-With: 50001
+﻿## Interface: 50001
 ## Title: Speedy Load
 ## Version: 2.0.0
 ## Author: Cybeloras of Detheroc/Mal'Ganis
