@@ -1,7 +1,7 @@
 ﻿
 -- --------------------------
 -- Speedy Load
--- By Cybeloras of Mal'Ganis
+-- By Cybeloras of Detheroc/Mal'Ganis
 -- --------------------------
 
 
