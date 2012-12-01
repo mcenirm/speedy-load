@@ -1,6 +1,6 @@
-﻿## Interface: 50001
+﻿## Interface: 50100
 ## Title: Speedy Load
-## Version: 2.0.1
+## Version: 2.0.2
 ## Author: Cybeloras of Detheroc/Mal'Ganis
 ## Notes: Disables certain events during loading screens to drastically improve loading times.
 
