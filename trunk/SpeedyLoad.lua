@@ -25,6 +25,10 @@ local events = {
 	UPDATE_FACTION = {},
 }
 
+local frameBlacklist = {
+	[WorldStateAlwaysUpFrame] = true
+}
+
 -- our PLAYER_ENTERING_WORLD handler needs to be absolutely the very first one that gets fired.
 local t = {GetFramesRegisteredForEvent("PLAYER_ENTERING_WORLD")}
 for i, frame in ipairs(t) do
@@ -58,7 +62,7 @@ local function unregister(event, ...)
 	for i = 1, select("#", ...) do
 		local frame = select(i, ...)
 		local UnregisterEvent = frame.UnregisterEvent
-		if validUnregisterFuncs[UnregisterEvent] or isUnregisterFuncValid(frame, UnregisterEvent) then
+		if (not frameBlacklist[frame]) and (validUnregisterFuncs[UnregisterEvent] or isUnregisterFuncValid(frame, UnregisterEvent)) then
 			UnregisterEvent(frame, event)
 			events[event][frame] = 1
 		end
