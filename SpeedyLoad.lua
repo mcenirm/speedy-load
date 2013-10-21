@@ -29,17 +29,44 @@ local frameBlacklist = {
 	[WorldStateAlwaysUpFrame] = true
 }
 
+local function canMod(frame)
+	if frameBlacklist[frame] then
+		return false
+	end
+
+	local name = frame:GetName()
+
+	if not name then
+		-- As a rule of thumb, Blizzard doesn't create anonymous frames
+		-- so it should always be safe to modify them.
+		return true
+	end
+
+	local isSecure = issecurevariable(name)
+
+	if isSecure then
+		frameBlacklist[frame] = true
+		return false
+	end
+
+	return true
+end
+
 -- our PLAYER_ENTERING_WORLD handler needs to be absolutely the very first one that gets fired.
 local t = {GetFramesRegisteredForEvent("PLAYER_ENTERING_WORLD")}
 for i, frame in ipairs(t) do
-    frame:UnregisterEvent("PLAYER_ENTERING_WORLD")
+	if canMod(frame) then
+		frame:UnregisterEvent("PLAYER_ENTERING_WORLD")
+	end
 end
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("PLAYER_ENTERING_WORLD")
 
 for i, frame in ipairs(t) do
-    frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+	if canMod(frame) then
+		frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+	end
 end
 wipe(t)
 t = nil
@@ -62,7 +89,7 @@ local function unregister(event, ...)
 	for i = 1, select("#", ...) do
 		local frame = select(i, ...)
 		local UnregisterEvent = frame.UnregisterEvent
-		if (not frameBlacklist[frame]) and (validUnregisterFuncs[UnregisterEvent] or isUnregisterFuncValid(frame, UnregisterEvent)) then
+		if canMod(frame) and (validUnregisterFuncs[UnregisterEvent] or isUnregisterFuncValid(frame, UnregisterEvent)) then
 			UnregisterEvent(frame, event)
 			events[event][frame] = 1
 		end
