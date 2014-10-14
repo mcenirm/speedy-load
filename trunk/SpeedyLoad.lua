@@ -23,6 +23,7 @@ local events = {
 	ACTIONBAR_SLOT_CHANGED = {},
 	SPELL_UPDATE_USABLE = {},
 	UPDATE_FACTION = {},
+	MAP_BAR_UPDATE = {},
 }
 
 local frameBlacklist = {
