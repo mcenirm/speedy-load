@@ -1,8 +1,7 @@
-﻿## Interface: 60000
-## X-CompatibleWith: 50400
+﻿## Interface: 70000
 ## Title: Speedy Load
-## Version: 2.2.1
-## Author: Cybeloras of Detheroc/Mal'Ganis
+## Version: 2.2.2
+## Author: Cybeloras of Aerie Peak
 ## Notes: Disables certain events during loading screens to drastically improve loading times.
 
 SpeedyLoad.lua
